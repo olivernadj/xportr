@@ -1,4 +1,4 @@
-from .model import Metric, MetricType
+from .model import Metric, Requirements
 
 
 METRIC_POOL: dict[tuple, Metric] = {}
@@ -25,7 +25,7 @@ class MetricPool:
                       name: str,
                       documentation: str,
                       labels_w_default: dict[str, str],
-                      metric_type: MetricType) -> Metric:
+                      requirements: Requirements) -> Metric:
         """Returns an existing Metric instance from the pool or creates a new if name and label keys are not matching.
 
         The documentation and metric_type parameters are ignored if the instance already exists.
@@ -36,7 +36,7 @@ class MetricPool:
                 name=name,
                 documentation=documentation,
                 labels_w_default=labels_w_default,
-                metric_type=metric_type,
+                requirements=requirements,
             )
             self._metric_pool[key] = metric
         return self._metric_pool[key]

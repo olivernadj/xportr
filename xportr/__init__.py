@@ -1,5 +1,5 @@
 from .model import (
-    MetricType, Metric, Cardinal
+    MetricType, AggregationModes, Requirements, Metric, Cardinal
 )
 from .pool import (
     METRIC_POOL, MetricPool
@@ -13,6 +13,8 @@ from .utils import (
 
 __all__ = (
     'MetricType',
+    'AggregationModes',
+    'Requirements',
     'Metric',
     'Cardinal',
     'METRIC_POOL',
