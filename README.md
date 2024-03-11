@@ -13,3 +13,16 @@
 It is an R&D hobby project to gain better understanding of [The official Python client](https://github.com/prometheus/client_python) 
 Aimed to be minimalistic.
 
+---
+### Glossary
+
+ - granular - resembling or consisting of small grains or particles. a measure of the number of elements of the set
+ - cardinality - it is the number of unique attributes or entities observed for a given metric
+ - sample - is a singe observation point for a given entity
+
+### Model
+```txt
+MetricPool[Metric]
+  - cardinal[Entity]
+    - samples[Sample]
+```
