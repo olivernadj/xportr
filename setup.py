@@ -23,7 +23,11 @@ setup(
     ],
     install_requires=[""],
     extras_require={
-        "dev": ["pytest>=7.0", "twine>=4.0.2"],
+        "dev": [
+            "pytest>=7.0",
+            "twine>=4.0.2",
+            "ruff==0.3.2",
+        ],
     },
     python_requires=">=3.10",
 )

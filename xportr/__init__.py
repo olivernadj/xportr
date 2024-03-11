@@ -1,6 +1,3 @@
-from . import (
-    model, pool, utils,
-)
 from .model import (
     MetricType, Metric
 )
