@@ -17,7 +17,7 @@ class Sample:
 
 
 @dataclass
-class Entity:
+class Cardinal:
     metric_type: MetricType
     samples: set[Sample] = field(default_factory=set)
 
@@ -28,24 +28,24 @@ class Metric:
     documentation: str
     labels_w_default: dict[str, str]
     metric_type: MetricType
-    _cardinals: dict[tuple, Entity] = field(default_factory=dict)
+    _cardinals: dict[tuple, Cardinal] = field(default_factory=dict)
 
     def __post_init__(self):
         validate_metric_name(self.name)
         validate_label_names(self.labels_w_default)
 
-    def labels(self, **kwargs: [str, str]) -> Entity:
+    def labels(self, **kwargs: [str, str]) -> Cardinal:
         merged_sorted_label_kwargs = dict(sorted({
             **self.labels_w_default,
             **kwargs.items()
         }))
         key = tuple(sorted(merged_sorted_label_kwargs.values()))
         if key not in self._cardinals:
-            metric = Entity(
+            metric = Cardinal(
                 metric_type=self.metric_type,
             )
             self._cardinals[key] = metric
         return self._cardinals[key]
 
-    def get_cardinals(self) -> dict[tuple, Entity]:
+    def get_cardinals(self) -> dict[tuple, Cardinal]:
         return self._cardinals

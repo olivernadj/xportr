@@ -1,5 +1,5 @@
 from .model import (
-    MetricType, Metric
+    MetricType, Metric, Cardinal
 )
 from .pool import (
     METRIC_POOL, MetricPool
@@ -14,6 +14,7 @@ from .utils import (
 __all__ = (
     'MetricType',
     'Metric',
+    'Cardinal',
     'METRIC_POOL',
     'MetricPool',
     'float_to_go_string',
