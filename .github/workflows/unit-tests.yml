@@ -25,4 +25,4 @@ jobs:
         pip install pytest
 
     - name: Run unit tests
-      run: PYTHONPATH=./xportr/src pytest
+      run: pytest

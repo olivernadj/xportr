@@ -1,6 +1,5 @@
 import unittest
-from model import Metric, MetricType
-from pool import MetricPool
+from xportr import Metric, MetricType, MetricPool
 
 
 class TestMetricPool(unittest.TestCase):

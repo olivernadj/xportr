@@ -1,5 +1,5 @@
 import unittest
-from ..src.utils import float_to_go_string, validate_metric_name, validate_label_name, validate_label_names
+from xportr import float_to_go_string, validate_metric_name, validate_label_name, validate_label_names
 
 
 class GeneratorTest(unittest.TestCase):

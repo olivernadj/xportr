@@ -1,6 +1,6 @@
 from enum import Enum
 from dataclasses import dataclass, field
-from utils import validate_metric_name, validate_label_names
+from .utils import validate_metric_name, validate_label_names
 
 
 class MetricType(Enum):

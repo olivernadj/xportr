@@ -1,4 +1,4 @@
-from model import Metric, MetricType
+from .model import Metric, MetricType
 
 
 METRIC_POOL: dict[tuple, Metric] = {}
