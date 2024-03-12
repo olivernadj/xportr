@@ -1,48 +1,26 @@
-from enum import Enum, auto
+# from enum import Enum, auto
+# from typing import Any
 from dataclasses import dataclass, field
 from .utils import validate_metric_name, validate_label_names
+from .cardinal_sampler_builder import cardinal_sampler_builder, Cardinal
+from .requirements import Requirements
+from typing import Callable
 
-DEFAULT_MAX_SAMPLES = 100
-
-
-class MetricType(Enum):
-    GAUGE = "gauge"
-    COUNTER = "counter"
-    SUMMARY = "summary"
-    HISTOGRAM = "histogram"
-
-
-class AggregationModes(Enum):
-    MOST_RECENT = auto()  # Only the latest value will be preserved. No aggregation.
-    ALL = auto()  # All Samples within a single Cardinal will be preserved. Requires timestamp mode.
-    # AVERAGE, MAX, MIN and SUM are aggregated on exporter level. Prometheus just scrap an already aggregated
-    # values without knowing it. MetricPool.evaluate() evaluates and reset aggregation. It should call right
-    # before dump the metrics.
-    AVERAGE = auto()  # ^^
-    MAX = auto()  # ^^
-    MIN = auto()  # ^^
-    SUM = auto()  # ^^
-
-
-@dataclass
-class Requirements:
-    metric_type: MetricType
-    aggregation: AggregationModes = AggregationModes.MOST_RECENT
-    # Max Samples of a single Cardinal before the least recent will be cleaned up. Requires AggregationModes.ALL
-    max_samples: int = DEFAULT_MAX_SAMPLES
-    time_to_live: int = 0  # 0 meas never expire, otherwise after X seconds the Sample will be cleaned.
-
-
-@dataclass
-class Sample:
-    value: float
-    timestamp: int = None
-
-
-@dataclass
-class Cardinal:
-    requirements: Requirements
-    samples: set[Sample] = field(default_factory=set)
+# @dataclass
+# class Sample:
+#     value: float
+#     timestamp: int = None
+#
+#
+# @dataclass
+# class Cardinal:
+#     requirements: Requirements
+#     sampler: Any
+#
+#     # samples: set[Sample] = field(default_factory=set)
+#
+#     def __post_init__(self):
+#         CardinalSamplerBuilder.build_metric(self.requirements)
 
 
 @dataclass
@@ -51,11 +29,14 @@ class Metric:
     documentation: str
     labels_w_default: dict[str, str]
     requirements: Requirements
+    builder: Callable = None
     _cardinals: dict[tuple, Cardinal] = field(default_factory=dict)
 
     def __post_init__(self):
         validate_metric_name(self.name)
         validate_label_names(self.labels_w_default)
+        if self.builder is None:
+            self.builder = cardinal_sampler_builder
 
     def labels(self, **kwargs: [str, str]) -> Cardinal:
         merged_label_kwargs = {
@@ -65,10 +46,10 @@ class Metric:
         merged_sorted_label_kwargs = dict(sorted(merged_label_kwargs.items()))
         key = tuple(merged_sorted_label_kwargs.values())
         if key not in self._cardinals:
-            metric = Cardinal(
+            cardinal = self.builder(
                 requirements=self.requirements,
             )
-            self._cardinals[key] = metric
+            self._cardinals[key] = cardinal
         return self._cardinals[key]
 
     def get_cardinals(self) -> dict[tuple, Cardinal]:

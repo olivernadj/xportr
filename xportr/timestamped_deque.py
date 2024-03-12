@@ -4,6 +4,7 @@ from collections import deque
 
 
 class TimestampedDeque(deque):
+    """Deques support thread-safe, memory efficient appends and pops from either side of the deque"""
     _ttl: int = 0
 
     def __init__(self, elems_with_ts: Iterable, elems_without_ts: Iterable, maxlen: int, ttl: int):
@@ -22,7 +23,7 @@ class TimestampedDeque(deque):
         self.append((entrance_timestamp, elem))
 
     def get_all_non_expired(self) -> 'TimestampedDeque':
-        must_entered_after = int(time.time()) - self._ttl
+        must_entered_after = 0 if self._ttl == 0 else int(time.time()) - self._ttl
         return TimestampedDeque(
             elems_with_ts=[e for e in self if e[0] > must_entered_after],
             elems_without_ts=(), maxlen=self.maxlen, ttl=self._ttl)

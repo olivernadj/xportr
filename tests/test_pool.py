@@ -1,5 +1,7 @@
 import unittest
-from xportr import Metric, MetricType, MetricPool, Requirements
+from xportr import (
+    Metric, MetricType, MetricPool, Requirements
+)
 
 
 class TestMetricPool(unittest.TestCase):
