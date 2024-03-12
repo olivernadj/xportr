@@ -12,7 +12,6 @@ class GeneratorTest(unittest.TestCase):
             for name in valid_names:
                 with self.subTest(name=name):
                     self.assertIsNone(validate_metric_name(name))
-
         with self.subTest(name="invalid_names"):
             invalid_names = ['1metric', '$metric', 'metric name', 'metric-name']
             for name in invalid_names:
@@ -26,14 +25,12 @@ class GeneratorTest(unittest.TestCase):
             for label in valid_labels:
                 with self.subTest(label=label):
                     self.assertIsNone(validate_label_name(label))
-
         with self.subTest(name="invalid_labels"):
             invalid_labels = ['1label', '$label', 'label name', 'label-name', 'label:name']
             for label in invalid_labels:
                 with self.subTest(label=label):
                     with self.assertRaises(ValueError):
                         validate_label_name(label)
-
         with self.subTest(name="reserved_labels"):
             reserved_labels = ['__reserved', '__another_reserved']
             for label in reserved_labels:
@@ -45,7 +42,6 @@ class GeneratorTest(unittest.TestCase):
         with self.subTest(name="valid_labels"):
             valid_labels = {'label1': 'value1', 'label2': 'value2'}
             self.assertIsNone(validate_label_names(valid_labels))
-
         with self.subTest(name="invalid_labels"):
             invalid_labels = {'1label': 'value1', '$label': 'value2', 'label-name': 'value3'}
             with self.assertRaises(ValueError):

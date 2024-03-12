@@ -22,7 +22,6 @@ class TestModelCardinal(unittest.TestCase):
             cardinal3 = self.metric.labels(zlabel1='cardinal1', label2='cardinal2')
             self.assertIs(cardinal1, cardinal2)
             self.assertIs(cardinal1, cardinal3)
-
         with self.subTest(name="default_overload"):
             cardinal1 = self.metric.labels(zlabel1='foo', label2='bar')
             cardinal2 = self.metric.labels(zlabel1='foo', label2='bar')
