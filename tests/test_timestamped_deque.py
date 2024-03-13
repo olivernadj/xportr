@@ -8,7 +8,7 @@ from xportr import (
 class TestTimestampedDeque(unittest.TestCase):
     def setUp(self):
         self.tsd = TimestampedDeque(
-            elems_with_ts=[(int(time.time()), 'lorem')],
+            elems_with_ts=[(time.time_ns(), 'lorem')],
             elems_without_ts=['ipsum', 'dolor'],
             maxlen=10, ttl=2)
 

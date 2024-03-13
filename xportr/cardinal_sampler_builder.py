@@ -1,5 +1,5 @@
 import time
-from abc import ABC, abstractmethod
+from abc import ABC
 from typing import Any, TypeVar
 from .requirements import MetricType, AggregationModes, Requirements
 from .timestamped_deque import TimestampedDeque
@@ -22,25 +22,25 @@ class Sampler(ABC):
     def set(self, value: T, timestamp: int):
         raise NotImplementedError
 
-    def get(self):
+    def get(self) -> TimestampedDeque[tuple[int, Any]]:
         raise NotImplementedError
 
 
 class MostRecentSampler(Sampler):
     def set(self, value: T, timestamp: int):
-        timestamp = timestamp if timestamp is not None else int(time.time())
+        timestamp = timestamp if timestamp is not None else time.time_ns()
         self.outbox.append((timestamp, value))
 
-    def get(self):
+    def get(self) -> TimestampedDeque[tuple[int, Any]]:
         return self.outbox.get_all_non_expired()
 
 
 class AllSampler(Sampler):
     def set(self, value: T, timestamp: int = None):
-        timestamp = timestamp if timestamp is not None else int(time.time())
+        timestamp = timestamp if timestamp is not None else time.time_ns()
         self.outbox.append((timestamp, value))
 
-    def get(self):
+    def get(self) -> TimestampedDeque[tuple[int, Any]]:
         return self.outbox.get_all_non_expired()
 
 
@@ -71,7 +71,7 @@ class Cardinal(ABC):
     def set(self, value: T, timestamp: int = None):
         raise NotImplementedError
 
-    def get(self):
+    def get(self) -> TimestampedDeque[tuple[int, Any]]:
         raise NotImplementedError
 
 
@@ -80,7 +80,7 @@ class GaugeCardinal(Cardinal):
     def set(self, value: T, timestamp: int = None):
         self.sampler.set(value=value, timestamp=timestamp)
 
-    def get(self):
+    def get(self) -> TimestampedDeque[tuple[int, Any]]:
         return self.sampler.get()
 
 

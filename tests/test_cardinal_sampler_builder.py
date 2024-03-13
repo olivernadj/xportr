@@ -46,7 +46,7 @@ class TestCardinalSampler(unittest.TestCase):
         with self.subTest(name="explicit_timestamp"):
             for _ in range(5):
                 v = random.uniform(-50, 50)
-                ts = int(time.time())
+                ts = time.time_ns()
                 cardinal_sampler.set(v, ts)
                 self.assertEqual((ts, v), cardinal_sampler.get()[0])
 
@@ -66,6 +66,6 @@ class TestCardinalSampler(unittest.TestCase):
         with self.subTest(name="explicit_timestamp"):
             for i in range(5):
                 v = random.uniform(-50, 50)
-                ts = int(time.time())
+                ts = time.time_ns()
                 cardinal_sampler.set(v, ts)
                 self.assertEqual((ts, v), cardinal_sampler.get()[i])
