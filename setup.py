@@ -5,16 +5,18 @@ with open("./README.md", "r", encoding="utf-8") as f:
 
 setup(
     name="xportr",
-    version="0.0.1",
+    version="0.0.2",
     description="Lightweight Prometheus exporter",
-    package_dir={"": "xportr"},
-    packages=find_packages(where="xportr"),
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/olivernadj/xportr",
     author="Oliver Nadj",
     author_email="mr.oliver.nadj@gmail.com",
     license="MIT",
+    packages=[
+        'xportr',
+        'xportr.prometheus',
+    ],
     classifiers=[
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3.10",

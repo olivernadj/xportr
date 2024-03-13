@@ -15,7 +15,7 @@ def format_sample_line(name: str, labels: dict, value: float, timestamp_ns: int 
     timestamp = ''
     if timestamp_ns is not None:
         # Convert to milliseconds.
-        timestamp = f' {int(float(timestamp_ns) / 1000):d}'
+        timestamp = f' {int(float(timestamp_ns) / 1000000):d}'
     return f'{name}{label_str} {float_to_go_string(value)}{timestamp}\n'
 
 
