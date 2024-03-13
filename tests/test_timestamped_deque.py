@@ -19,18 +19,24 @@ class TestTimestampedDeque(unittest.TestCase):
             self.assertEqual(len(alive_dq), len(self.tsd))
             self.assertIsNot(self.tsd, alive_dq)
         with self.subTest(name="wait_for_expiration"):
-            time.sleep(2)
+            time.sleep(1)
+            self.tsd.ts_append('sit')
+            time.sleep(1)
             self.tsd.ts_append('amet')
             self.tsd = self.tsd.get_all_non_expired()
-            self.assertEqual(len(self.tsd), 1)
-            self.assertIs(self.tsd[0][1], 'amet')
+            self.assertEqual(len(self.tsd), 2)
+            self.assertIs(self.tsd[1][1], 'amet')
 
     def test_maxlen(self) -> None:
+        self.tsd = TimestampedDeque(
+            elems_with_ts=[(time.time_ns(), 'lorem')],
+            elems_without_ts=['ipsum', 'dolor'],
+            maxlen=15, ttl=2)
         with self.subTest(name="length"):
             self.tsd.ts_extend(
                 [chr(i) for i in range(ord('a'), ord('a')+20)]
             )
-            self.assertEqual(len(self.tsd), 10)
+            self.assertEqual(len(self.tsd), 15)
         with self.subTest(name="most_recent_elems"):
             self.tsd.ts_extend(['most', 'recent'])
             self.assertIs(self.tsd.pop()[1], 'recent')

@@ -34,7 +34,7 @@ class TestPrometheusFormatter(unittest.TestCase):
                     timestamp_ns=1710322834559256212,
                 )
                 self.assertEqual(
-                    "metric1{label1=\"default1\"} 5.0 1710322834559256\n",
+                    "metric1{label1=\"default1\"} 5.0 1710322834559\n",
                     line_ts_txt)
                 line_txt = format_sample_line(
                     name=metric.name,
@@ -89,6 +89,6 @@ class TestPrometheusFormatter(unittest.TestCase):
                 "metric1{label1=\"default1\"} 5.0\n"
                 "# HELP metric2 Documentation 2\n"
                 "# TYPE metric2 gauge\n"
-                "metric2{label2=\"default2\"} 7.0 1710322834558256\n"
-                "metric2{label2=\"default2\"} 6.5 1710322834559256\n",
+                "metric2{label2=\"default2\"} 7.0 1710322834558\n"
+                "metric2{label2=\"default2\"} 6.5 1710322834559\n",
                 metric_with_cardinals_txt)

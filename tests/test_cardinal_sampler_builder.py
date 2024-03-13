@@ -76,3 +76,16 @@ class TestCardinalSampler(unittest.TestCase):
                 ts = time.time_ns()
                 cardinal_sampler.set(v, ts)
                 self.assertEqual((ts, v), cardinal_sampler.get()[i])
+        with self.subTest(name="maxlen"):
+            cardinal_sampler = self.metric_pool.get_or_create(
+                name='maxlen', documentation='Documentation maxlen',
+                labels_w_default={'maxlen': 'default'},
+                requirements=Requirements(
+                    metric_type=MetricType.GAUGE,
+                    aggregation=AggregationModes.ALL,
+                    max_samples=16)
+            ).labels(label1='maxlen')
+            for i in range(32):
+                v = random.uniform(-50, 50)
+                cardinal_sampler.set(v)
+                self.assertEqual((i+1) if i < 16 else 16, len(cardinal_sampler.get()))

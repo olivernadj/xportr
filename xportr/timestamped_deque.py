@@ -9,7 +9,7 @@ class TimestampedDeque(deque):
     _ttl: int = 0
 
     def __init__(self, elems_with_ts: Iterable, elems_without_ts: Iterable, maxlen: int, ttl: int):
-        self._ttl = ttl * 100000  # seconds to nanoseconds
+        self._ttl = ttl * 1000000000  # seconds to nanoseconds
         deque.__init__(self, iterable=elems_with_ts, maxlen=maxlen)
         if elems_without_ts:
             self.ts_extend(iterable=elems_without_ts)
