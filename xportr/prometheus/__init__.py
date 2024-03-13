@@ -1,8 +1,10 @@
 from .formatter import (
-    sample_line
+    format_sample_line, generate_metric_with_cardinals, generate_all_metrics
 )
 
 
 __all__ = (
-    'sample_line',
+    'format_sample_line',
+    'generate_metric_with_cardinals',
+    'generate_all_metrics'
 )
