@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 import unittest
 from xportr import (
     Metric, MetricType, MetricPool, Requirements
@@ -42,24 +43,32 @@ class TestMetricPool(unittest.TestCase):
     def test_get_or_create_existing_metric(self) -> None:
         existing_metric_key = ('metric1', 'label1')
         existing_metric = self._metric_pool_dict[existing_metric_key]
-        retrieved_metric = self.metric_pool.get_or_create('metric1', 'Documentation 1', {'label1': 'still-the-same'},
-                                                          requirements=Requirements(metric_type=MetricType.COUNTER))
+        retrieved_metric = self.metric_pool.get_or_create(
+            'metric1', 'Documentation 1',
+            {'label1': 'still-the-same'},
+            requirements=Requirements(metric_type=MetricType.COUNTER))
         self.assertIs(retrieved_metric, existing_metric)
 
     def test_get_or_create_new_metric(self) -> None:
         new_metric_name = 'new_metric'
         new_metric_labels = ('label3', 'default3')
         new_metric_key = (new_metric_name, new_metric_labels[0])
-        new_metric = self.metric_pool.get_or_create(new_metric_name, 'New Metric Documentation', {'label3': 'default3'},
-                                                    requirements=Requirements(metric_type=MetricType.SUMMARY))
+        new_metric = self.metric_pool.get_or_create(
+            new_metric_name, 'New Metric Documentation',
+            {'label3': 'default3'},
+            requirements=Requirements(metric_type=MetricType.SUMMARY))
         self.assertIsInstance(new_metric, Metric)
         self.assertEqual(new_metric.name, new_metric_name)
-        self.assertIn(new_metric_key, self.metric_pool._metric_pool)
+        self.assertIn(new_metric_key, self.metric_pool._metric_pool)  # pylint: disable=W0212
 
     def test_get_or_create_different_labels(self) -> None:
         metric_name = 'metric3'
-        metric1 = self.metric_pool.get_or_create(metric_name, 'Metric 3 Documentation', {'label1': 'value1'},
-                                                 requirements=Requirements(metric_type=MetricType.HISTOGRAM))
-        metric2 = self.metric_pool.get_or_create(metric_name, 'Metric 3 Documentation', {'label2': 'value2'},
-                                                 requirements=Requirements(metric_type=MetricType.HISTOGRAM))
+        metric1 = self.metric_pool.get_or_create(
+            metric_name, 'Metric 3 Documentation',
+            {'label1': 'value1'},
+            requirements=Requirements(metric_type=MetricType.HISTOGRAM))
+        metric2 = self.metric_pool.get_or_create(
+            metric_name, 'Metric 3 Documentation',
+            {'label2': 'value2'},
+            requirements=Requirements(metric_type=MetricType.HISTOGRAM))
         self.assertIsNot(metric1, metric2)  # Different metric instances

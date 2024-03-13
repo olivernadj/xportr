@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 import time
 import unittest
 import random
@@ -20,7 +21,9 @@ class TestCardinalSamplerBuilder(unittest.TestCase):
                     aggregation=aggregation_mode
                 )
                 cardinal_sampler = cardinal_sampler_builder(requirements=req)
-                build = (cardinal_sampler.__class__.__name__, cardinal_sampler.sampler.__class__.__name__)
+                build = (
+                    cardinal_sampler.__class__.__name__,
+                    cardinal_sampler.sampler.__class__.__name__)
                 if build in unique_cardinal_samplers:
                     self.fail("Duplicated cardinal_sampler")
                 unique_cardinal_samplers.append(build)
@@ -35,7 +38,9 @@ class TestCardinalSampler(unittest.TestCase):
         metric = self.metric_pool.get_or_create(
             name='metric1', documentation='Documentation 1',
             labels_w_default={'label1': 'default1'},
-            requirements=Requirements(metric_type=MetricType.GAUGE, aggregation=AggregationModes.MOST_RECENT)
+            requirements=Requirements(
+                metric_type=MetricType.GAUGE,
+                aggregation=AggregationModes.MOST_RECENT)
         )
         cardinal_sampler = metric.labels()
         with self.subTest(name="default_timestamp"):
@@ -54,7 +59,9 @@ class TestCardinalSampler(unittest.TestCase):
         metric = self.metric_pool.get_or_create(
             name='metric1', documentation='Documentation 1',
             labels_w_default={'label1': 'default_timestamp'},
-            requirements=Requirements(metric_type=MetricType.GAUGE, aggregation=AggregationModes.ALL)
+            requirements=Requirements(
+                metric_type=MetricType.GAUGE,
+                aggregation=AggregationModes.ALL)
         )
         cardinal_sampler = metric.labels()
         with self.subTest(name="default_timestamp"):

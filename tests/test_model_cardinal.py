@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 import unittest
 from xportr import (
     Metric, MetricType, MetricPool, Cardinal, Requirements

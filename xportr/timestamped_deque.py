@@ -4,7 +4,8 @@ from collections import deque
 
 
 class TimestampedDeque(deque):
-    """Deques support thread-safe, memory efficient appends and pops from either side of the deque"""
+    """Deques support thread-safe, memory efficient appends and pops from either side of the
+    deque"""
     _ttl: int = 0
 
     def __init__(self, elems_with_ts: Iterable, elems_without_ts: Iterable, maxlen: int, ttl: int):

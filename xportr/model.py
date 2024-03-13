@@ -1,10 +1,10 @@
 # from enum import Enum, auto
 # from typing import Any
+from typing import Callable
 from dataclasses import dataclass, field
 from .utils import validate_metric_name, validate_label_names
 from .cardinal_sampler_builder import cardinal_sampler_builder, Cardinal
 from .requirements import Requirements
-from typing import Callable
 
 # @dataclass
 # class Sample:

@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 import unittest
 from xportr import (
     Requirements, MetricType, AggregationModes,
@@ -17,7 +18,9 @@ class TestPrometheusFormatter(unittest.TestCase):
         metric = self.metric_pool.get_or_create(
             name='metric1', documentation='Documentation 1',
             labels_w_default={'label1': 'default1'},
-            requirements=Requirements(metric_type=MetricType.GAUGE, aggregation=AggregationModes.MOST_RECENT)
+            requirements=Requirements(
+                metric_type=MetricType.GAUGE,
+                aggregation=AggregationModes.MOST_RECENT)
         )
         metric.labels().set(5)
         metric_labes_keys = metric.labels_w_default.keys()
@@ -30,11 +33,14 @@ class TestPrometheusFormatter(unittest.TestCase):
                     value=sample[1],
                     timestamp_ns=1710322834559256212,
                 )
-                self.assertEqual("metric1{label1=\"default1\"} 5.0 1710322834559256\n", line_ts_txt)
+                self.assertEqual(
+                    "metric1{label1=\"default1\"} 5.0 1710322834559256\n",
+                    line_ts_txt)
                 line_txt = sample_line(
                     name=metric.name,
                     labels=cardinal_labels,
                     value=sample[1],
                 )
-                self.assertEqual("metric1{label1=\"default1\"} 5.0\n", line_txt)
-
+                self.assertEqual(
+                    "metric1{label1=\"default1\"} 5.0\n",
+                    line_txt)

@@ -10,19 +10,18 @@ def float_to_go_string(d):
     d = float(d)
     if d == float("inf"):
         return '+Inf'
-    elif d == float("-inf"):
+    if d == float("-inf"):
         return '-Inf'
-    elif math.isnan(d):
+    if math.isnan(d):
         return 'NaN'
-    else:
-        s = repr(d)
-        dot = s.find('.')
-        # Go switches to exponents sooner than Python.
-        # We only need to care about positive values for le/quantile.
-        if d > 0 and dot > 6:
-            mantissa = f'{s[0]}.{s[1:dot]}{s[dot + 1:]}'.rstrip('0.')
-            return f'{mantissa}e+0{dot - 1}'
-        return s
+    s = repr(d)
+    dot = s.find('.')
+    # Go switches to exponents sooner than Python.
+    # We only need to care about positive values for le/quantile.
+    if d > 0 and dot > 6:
+        mantissa = f'{s[0]}.{s[1:dot]}{s[dot + 1:]}'.rstrip('0.')
+        return f'{mantissa}e+0{dot - 1}'
+    return s
 
 
 def validate_metric_name(name: str):

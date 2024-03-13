@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 import unittest
 import time
 from xportr import (
