@@ -39,6 +39,9 @@ class Metric:
             self.builder = cardinal_sampler_builder
 
     def labels(self, **kwargs: [str, str]) -> Cardinal:
+        extra_labels = [key for key in kwargs if key not in self.labels_w_default]
+        if extra_labels:
+            raise KeyError(f"Extra labels: {extra_labels}")
         merged_label_kwargs = {
             **self.labels_w_default,
             **kwargs

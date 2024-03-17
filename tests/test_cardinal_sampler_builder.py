@@ -79,7 +79,7 @@ class TestCardinalSampler(unittest.TestCase):
         with self.subTest(name="maxlen"):
             cardinal_sampler = self.metric_pool.get_or_create(
                 name='maxlen', documentation='Documentation maxlen',
-                labels_w_default={'maxlen': 'default'},
+                labels_w_default={'label1': 'default'},
                 requirements=Requirements(
                     metric_type=MetricType.GAUGE,
                     aggregation=AggregationModes.ALL,
