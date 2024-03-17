@@ -24,6 +24,7 @@ def float_to_go_string(d):
     return s
 
 
+
 def validate_metric_name(name: str):
     if not METRIC_NAME_RE.match(name):
         raise ValueError('Invalid metric name: ' + name)

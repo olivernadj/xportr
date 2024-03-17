@@ -40,6 +40,12 @@ class TestMetricPool(unittest.TestCase):
             with self.assertRaises(TypeError):
                 MetricPool(metric_pool)
 
+    def test_validate_default_pool(self) -> None:
+        default_pool = MetricPool()
+        self.assertIsNot(
+            default_pool._metric_pool, self.metric_pool._metric_pool  # pylint: disable=W0212
+        )
+
     def test_get_or_create_existing_metric(self) -> None:
         existing_metric_key = ('metric1', 'label1')
         existing_metric = self._metric_pool_dict[existing_metric_key]

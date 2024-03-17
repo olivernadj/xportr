@@ -7,7 +7,11 @@ from xportr import (
 
 class GeneratorTest(unittest.TestCase):
     def test_float_to_go_string(self) -> None:
-        self.assertEqual(float_to_go_string(float("Inf")), "+Inf")
+        self.assertEqual("+Inf", float_to_go_string(float("Inf")))
+        self.assertEqual("-Inf", float_to_go_string(float("-Inf")))
+        self.assertEqual("NaN", float_to_go_string(float("nan")))
+        self.assertEqual("0.1", float_to_go_string(.10))
+        self.assertEqual("0.12", float_to_go_string(".12"))
 
     def test_validate_metric_name(self) -> None:
         with self.subTest(name="valid_names"):

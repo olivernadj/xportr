@@ -32,3 +32,7 @@ class TestModelCardinal(unittest.TestCase):
         cardinal1 = self.metric.labels(zlabel1='foo', label2='bar1', c='xyz')
         cardinal2 = self.metric.labels(zlabel1='foo', label2='bar2', c='xyz')
         self.assertIsNot(cardinal1, cardinal2)
+
+    def test_extra_labels_cardinal(self) -> None:
+        with self.assertRaises(KeyError):
+            self.metric.labels(zlabel1='foo', label2='bar1', c='xyz', o_O='O_o')
