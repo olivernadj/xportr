@@ -78,3 +78,9 @@ class TestMetricPool(unittest.TestCase):
             {'label2': 'value2'},
             requirements=Requirements(metric_type=MetricType.HISTOGRAM))
         self.assertIsNot(metric1, metric2)  # Different metric instances
+
+    def test_get_or_create_without_labels(self) -> None:
+        metric_name = 'metric4'
+        self.metric_pool.get_or_create(
+            metric_name, 'Metric 4 Documentation', None,
+            requirements=Requirements(metric_type=MetricType.HISTOGRAM))

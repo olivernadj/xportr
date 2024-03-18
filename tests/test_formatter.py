@@ -15,43 +15,51 @@ class TestPrometheusFormatter(unittest.TestCase):
         self.metric_pool = MetricPool(self._metric_pool_dict)
 
     def test_sample_line(self) -> None:
+        for labels_w_default in [None, {'label1': 'default1'}]:
+            metric = self.metric_pool.get_or_create(
+                name='metric1', documentation='Documentation 1',
+                labels_w_default=labels_w_default,
+                requirements=Requirements(
+                    metric_type=MetricType.GAUGE,
+                    aggregation=AggregationModes.MOST_RECENT)
+            )
+            metric.labels().set(5)
+            metric_labels_keys = metric.labels_w_default.keys()
+            for labels, cardinal in metric.get_cardinals().items():
+                cardinal_labels = dict(zip(metric_labels_keys, labels))
+                for sample in cardinal.get():
+                    line_ts_txt = format_sample_line(
+                        name=metric.name,
+                        labels=cardinal_labels,
+                        value=sample[1],
+                        timestamp_ns=1710322834559256212,
+                    )
+                    label_part = "" if labels_w_default is None else '{label1="default1"}'
+                    self.assertEqual(
+                        f"metric1{label_part} 5.0 1710322834559\n",
+                        line_ts_txt)
+                    line_txt = format_sample_line(
+                        name=metric.name,
+                        labels=cardinal_labels,
+                        value=sample[1],
+                    )
+                    self.assertEqual(
+                        f"metric1{label_part} 5.0\n",
+                        line_txt)
+
+    def test_metric_with_cardinals(self) -> None:
+        labels_w_default = {'z': 'z1', 'a': 'a1', 'n': 'n1'}
         metric = self.metric_pool.get_or_create(
             name='metric1', documentation='Documentation 1',
-            labels_w_default={'label1': 'default1'},
+            labels_w_default=labels_w_default,
             requirements=Requirements(
                 metric_type=MetricType.GAUGE,
                 aggregation=AggregationModes.MOST_RECENT)
         )
-        metric.labels().set(5)
-        metric_labels_keys = metric.labels_w_default.keys()
-        for labels, cardinal in metric.get_cardinals().items():
-            cardinal_labels = dict(zip(metric_labels_keys, labels))
-            for sample in cardinal.get():
-                line_ts_txt = format_sample_line(
-                    name=metric.name,
-                    labels=cardinal_labels,
-                    value=sample[1],
-                    timestamp_ns=1710322834559256212,
-                )
-                self.assertEqual(
-                    "metric1{label1=\"default1\"} 5.0 1710322834559\n",
-                    line_ts_txt)
-                line_txt = format_sample_line(
-                    name=metric.name,
-                    labels=cardinal_labels,
-                    value=sample[1],
-                )
-                self.assertEqual(
-                    "metric1{label1=\"default1\"} 5.0\n",
-                    line_txt)
-
-    def test_metric_with_cardinals(self) -> None:
-        metric = self.metric_pool.get_or_create(
-            name='metric1', documentation='Documentation 1',
-            labels_w_default={'label1': 'default1'},
-            requirements=Requirements(
-                metric_type=MetricType.GAUGE,
-                aggregation=AggregationModes.MOST_RECENT)
+        line_ts_txt = format_sample_line(
+            name=metric.name,
+            labels=metric.labels_w_default,
+            value=5,
         )
         with self.subTest(name="empty_metric"):
             self.assertEqual("", generate_metric_with_cardinals(metric))
@@ -61,7 +69,7 @@ class TestPrometheusFormatter(unittest.TestCase):
             self.assertEqual(
                 "# HELP metric1 Documentation 1\n"
                 "# TYPE metric1 gauge\n"
-                "metric1{label1=\"default1\"} 5.0\n",
+                f"{line_ts_txt}",
                 metric_with_cardinals_txt)
 
     def test_all_metrics(self) -> None:
