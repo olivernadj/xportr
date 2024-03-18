@@ -36,3 +36,9 @@ class TestModelCardinal(unittest.TestCase):
     def test_extra_labels_cardinal(self) -> None:
         with self.assertRaises(KeyError):
             self.metric.labels(zlabel1='foo', label2='bar1', c='xyz', o_O='O_o')
+
+    def test_label_orders(self) -> None:
+        self.metric.labels(label2='b', zlabel1='c', c='a')
+        cardinals = self.metric.get_cardinals()
+        keys = list(cardinals.keys())
+        self.assertEqual(('a', 'b', 'c'), keys[0])

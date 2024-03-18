@@ -12,6 +12,7 @@ class GeneratorTest(unittest.TestCase):
         self.assertEqual("NaN", float_to_go_string(float("nan")))
         self.assertEqual("0.1", float_to_go_string(.10))
         self.assertEqual("0.12", float_to_go_string(".12"))
+        self.assertEqual("1.23456789e+06", float_to_go_string("1234567.89"))
 
     def test_validate_metric_name(self) -> None:
         with self.subTest(name="valid_names"):

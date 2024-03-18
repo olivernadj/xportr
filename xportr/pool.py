@@ -25,14 +25,17 @@ class MetricPool:
     def get_or_create(self,
                       name: str,
                       documentation: str,
-                      labels_w_default: dict[str, str],
+                      labels_w_default: dict[str, str] | None,
                       requirements: Requirements) -> Metric:
         """Returns an existing Metric instance from the pool or creates a new if name and label
         keys are not matching.
 
         The documentation and metric_type parameters are ignored if the instance already exists.
         """
-        key = (name,) + (tuple(sorted(labels_w_default.keys())))
+        if labels_w_default is None:
+            labels_w_default = {}
+        labels_w_default = dict(sorted(labels_w_default.items()))
+        key = (name,) + tuple(labels_w_default.keys())
         if key not in self._metric_pool:
             metric = Metric(
                 name=name,
