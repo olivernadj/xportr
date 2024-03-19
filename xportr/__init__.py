@@ -14,9 +14,13 @@ from .utils import (
     float_to_go_string, validate_metric_name, validate_label_name, validate_label_names
 )
 from .cardinal_sampler_builder import (
-    cardinal_sampler_builder, Cardinal, GaugeCardinal, CounterCardinal, SummaryCardinal,
-    HistogramCardinal, Sampler, MostRecentSampler, AllSampler, AverageSampler, MaxSampler,
-    MinSampler, SumSampler
+    cardinal_sampler_builder
+)
+from .cardinal import (
+    Cardinal, GaugeCardinal, CounterCardinal, SummaryCardinal, HistogramCardinal
+)
+from .sampler import (
+    Sampler, MostRecentSampler, AllSampler, AverageSampler, MaxSampler, MinSampler, SumSampler
 )
 
 __all__ = (

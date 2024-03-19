@@ -89,3 +89,74 @@ class TestCardinalSampler(unittest.TestCase):
                 v = random.uniform(-50, 50)
                 cardinal_sampler.set(v)
                 self.assertEqual((i+1) if i < 16 else 16, len(cardinal_sampler.get()))
+
+    def test_counter_most_recent(self):
+        metric = self.metric_pool.get_or_create(
+            name='counter1', documentation='Documentation of counter 1',
+            labels_w_default={'label1': 'default1'},
+            requirements=Requirements(
+                metric_type=MetricType.COUNTER,
+                aggregation=AggregationModes.MOST_RECENT)
+        )
+        cardinal_sampler = metric.labels()
+        with self.subTest(name="default_timestamp"):
+            total = 0
+            for _ in range(5):
+                v = random.uniform(0, 50)
+                total += v
+                cardinal_sampler.inc(v)
+                self.assertEqual(total, cardinal_sampler.get()[0][1])
+        cardinal_sampler = metric.labels(label1='explicit_timestamp')
+        with self.subTest(name="explicit_timestamp"):
+            total = 0
+            for _ in range(5):
+                v = random.uniform(0, 50)
+                total += v
+                ts = time.time_ns()
+                cardinal_sampler.inc(v, ts)
+                self.assertEqual((ts, total), cardinal_sampler.get()[0])
+        with self.subTest(name="expect_raises"):
+            cardinal_sampler = metric.labels(label1='expect_raises')
+            with self.assertRaises(ValueError):
+                cardinal_sampler.inc(-1)
+
+    def test_counter_all(self):
+        metric = self.metric_pool.get_or_create(
+            name='metric1', documentation='Documentation 1',
+            labels_w_default={'label1': 'default_timestamp'},
+            requirements=Requirements(
+                metric_type=MetricType.COUNTER,
+                aggregation=AggregationModes.ALL)
+        )
+        cardinal_sampler = metric.labels()
+        with self.subTest(name="default_timestamp"):
+            total = 0
+            for i in range(5):
+                v = random.uniform(0, 50)
+                total += v
+                cardinal_sampler.inc(v)
+                self.assertEqual(total, cardinal_sampler.get()[i][1])
+        cardinal_sampler = metric.labels(label1='explicit_timestamp')
+        with self.subTest(name="explicit_timestamp"):
+            total = 0
+            for i in range(5):
+                v = random.uniform(0, 50)
+                total += v
+                ts = time.time_ns()
+                cardinal_sampler.inc(v, ts)
+                self.assertEqual((ts, total), cardinal_sampler.get()[i])
+        with self.subTest(name="maxlen"):
+            cardinal_sampler = self.metric_pool.get_or_create(
+                name='maxlen', documentation='Documentation maxlen',
+                labels_w_default={'label1': 'default'},
+                requirements=Requirements(
+                    metric_type=MetricType.COUNTER,
+                    aggregation=AggregationModes.ALL,
+                    max_samples=16)
+            ).labels(label1='maxlen')
+            for i in range(32):
+                cardinal_sampler.inc()
+                self.assertEqual((i+1) if i < 16 else 16, len(cardinal_sampler.get()))
+        with self.subTest(name="expect_raises"):
+            with self.assertRaises(ValueError):
+                cardinal_sampler.inc(-1)
